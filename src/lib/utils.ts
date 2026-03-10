@@ -14,13 +14,6 @@ export function formatDate(date: Date | string) {
   }).format(new Date(date));
 }
 
-export function formatNumber(num: number) {
-  return new Intl.NumberFormat("en-US").format(num);
-}
-
-export function formatCurrency(amount: number, currency = "USD") {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency,
-  }).format(amount);
+export function formatCredits(credits: number) {
+  return credits.toLocaleString();
 }

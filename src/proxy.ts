@@ -1,4 +1,4 @@
-// src/middleware.ts
+// src/proxy.ts
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/server/auth";
 
@@ -6,11 +6,13 @@ const PUBLIC_ROUTES = [
   "/",
   "/sign-in",
   "/sign-up",
+  "/forgot-password",
+  "/reset-password",
   "/api/auth",
   "/api/health",
 ];
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (PUBLIC_ROUTES.some((route) => pathname.startsWith(route))) {
