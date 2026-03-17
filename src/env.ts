@@ -9,6 +9,7 @@ export const env = createEnv({
     BETTER_AUTH_SECRET: z.string().min(32),
     BETTER_AUTH_URL: z.string().url(),
     FURMA_INTERNAL_SECRET: z.string().min(16),
+    ENCRYPTION_KEY: z.string().min(32), // For BYOK key encryption
     NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
     NEXUS_API_URL: z.string().url().optional(),
     NEXUS_API_KEY: z.string().optional(),
@@ -22,6 +23,7 @@ export const env = createEnv({
     BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
     BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
     FURMA_INTERNAL_SECRET: process.env.FURMA_INTERNAL_SECRET,
+    ENCRYPTION_KEY: process.env.ENCRYPTION_KEY,
     NODE_ENV: process.env.NODE_ENV,
     NEXUS_API_URL: process.env.NEXUS_API_URL,
     NEXUS_API_KEY: process.env.NEXUS_API_KEY,

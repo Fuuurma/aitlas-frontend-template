@@ -1,4 +1,7 @@
-# AGENTS.md — aitlas-frontend-template
+# AGENTS.md — aitlas-nova
+
+## Overview
+Nova is the user-facing web UI for the Aitlas ecosystem - a multi-provider AI chat interface with agent orchestration.
 
 ## Stack
 - Next.js 16 App Router + TypeScript strict mode
@@ -6,9 +9,8 @@
 - Tailwind v4 (CSS-first config, no `tailwind.config.ts`)
 - shadcn/ui — 42 components installed
 - Better Auth — email/password + session management
-- Neon Postgres via `@neondatabase/serverless`
+- Neon Postgres — serverless PostgreSQL
 - Drizzle ORM — schema + migrations
-- t3-env — type-safe environment variables
 
 ## Commands
 
