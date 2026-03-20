@@ -177,6 +177,88 @@ const user = await db.select().from(users).where(eq(users.id, userId));
 3. Return `NextResponse.json()` for responses
 4. Handle errors with proper HTTP status codes
 
+## Utility Modules
+
+### Logging (`src/lib/logger.ts`)
+
+```ts
+import { logger, log } from "@/lib/logger";
+
+// Set user context (call after auth)
+logger.setUserId(user.id);
+
+// Log events
+log.info("User signed in", { method: "email" });
+log.error("API failed", { endpoint, error: err.message });
+log.warn("Rate limit approaching", { remaining: 10 });
+```
+
+### Rate Limiting (`src/lib/rate-limit.ts`)
+
+```ts
+import { createRateLimiter, apiRateLimiter } from "@/lib/rate-limit";
+
+// Use pre-configured limiters
+await apiRateLimiter.execute(() => fetch("/api/data"));
+
+// Create custom limiter
+const limiter = createRateLimiter({ max: 10, windowMs: 60000 });
+if (limiter.tryAcquire()) { /* allowed */ }
+```
+
+### Feature Flags (`src/lib/feature-flags.ts`)
+
+```ts
+import { isFeatureEnabled, useFeatureFlag } from "@/lib/feature-flags";
+
+// Server-side check
+if (isFeatureEnabled("new-dashboard")) { /* ... */ }
+
+// React hook
+const enabled = useFeatureFlag("new-dashboard");
+```
+
+### Formatting (`src/lib/format.ts`)
+
+```ts
+import { formatCredits, formatRelativeTime, formatCurrency } from "@/lib/format";
+
+formatCredits(1500);     // "1.5K"
+formatRelativeTime(date); // "5m ago"
+formatCurrency(12.99);    // "$12.99"
+```
+
+### Error Handling (`src/lib/errors.ts`)
+
+```ts
+import { AppError, getErrorMessage, withRetry } from "@/lib/errors";
+
+// Throw typed errors
+throw new ValidationError("Invalid input", { email: ["required"] });
+
+// Get user-friendly message
+const msg = getErrorMessage(error); // "Please check your input"
+
+// Retry with backoff
+const result = await withRetry(() => fetchData(), { maxAttempts: 3 });
+```
+
+### Hooks (`src/hooks/`)
+
+```ts
+// Debounce search
+const debounced = useDebounce(search, 500);
+
+// Responsive design
+const isMobile = useIsMobile();
+
+// Click outside
+const ref = useClickOutside(() => setIsOpen(false));
+
+// Local storage
+const [theme, setTheme] = useLocalStorage("theme", "dark");
+```
+
 ## Code Style Guidelines
 
 ### File Organization
