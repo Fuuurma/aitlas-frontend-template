@@ -102,6 +102,81 @@ await nexus.get("/endpoint", params, false); // false = internal
 4. API calls include `Authorization: Bearer <token>` header
 5. Backend validates token against `sessions` table
 
+## MCP Authentication (AI Agents)
+
+### Overview
+This template includes the Better Auth MCP plugin, allowing AI agents to authenticate via OAuth 2.0.
+
+### Discovery Endpoints
+| Endpoint | Purpose |
+|----------|---------|
+| `/.well-known/oauth-authorization-server` | OAuth server metadata |
+| `/.well-known/oauth-protected-resource` | Protected resource metadata |
+
+### MCP Auth Flow
+1. MCP client (AI agent) discovers OAuth endpoints via `/.well-known/*`
+2. Client registers dynamically via OAuth dynamic client registration
+3. User authorizes the agent via OAuth consent screen
+4. Client receives access token with scoped permissions
+5. Agent makes authenticated requests with `Authorization: Bearer <token>`
+
+### Protecting MCP Endpoints
+```ts
+// Example: Protect an MCP tool endpoint
+import { withMcpAuth } from "better-auth/plugins";
+import { auth } from "@/server/auth";
+
+const handler = withMcpAuth(auth, async (req, session) => {
+  // session.userId, session.scopes, session.clientId
+  return new Response(JSON.stringify({ result: "success" }));
+});
+
+export { handler as GET, handler as POST };
+```
+
+### Reference
+- Better Auth MCP Docs: https://better-auth.com/docs/plugins/mcp
+- IETF Agent Auth Draft: https://datatracker.ietf.org/doc/draft-klrc-aiagent-auth/
+
+## Shared Schema (@aitlas/schema)
+
+### Importing Types
+```ts
+// Type imports
+import type { User, Agent, Task, CreditTransaction } from "@aitlas/schema";
+
+// Drizzle schema imports
+import { users, sessions, agents, tasks } from "@aitlas/schema/drizzle";
+```
+
+### Helper File
+See `src/lib/shared-schema.ts` for re-exported types.
+
+### Using Shared Schema
+```ts
+import { users } from "@aitlas/schema/drizzle";
+import { db } from "@/server/db";
+import { eq } from "drizzle-orm";
+
+const user = await db.select().from(users).where(eq(users.id, userId));
+```
+
+## API Routes
+
+### Built-in Routes
+| Route | Method | Description |
+|-------|--------|-------------|
+| `/api/auth/[...all]` | ALL | Better Auth endpoints |
+| `/api/health` | GET | Health check endpoint |
+| `/api/user` | GET | Current user info |
+| `/api/credits` | GET | Credit balance + transactions |
+
+### Adding New Routes
+1. Create `src/app/api/<route>/route.ts`
+2. Use `auth.api.getSession()` to get current user
+3. Return `NextResponse.json()` for responses
+4. Handle errors with proper HTTP status codes
+
 ## Code Style Guidelines
 
 ### File Organization

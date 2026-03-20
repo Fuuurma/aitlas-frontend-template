@@ -1,6 +1,7 @@
 // src/server/auth.ts
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { mcp } from "better-auth/plugins";
 import { db } from "@/server/db";
 import * as schema from "@/server/db/schema";
 import { env } from "@/env";
@@ -37,6 +38,15 @@ export const auth = betterAuth({
     env.NEXT_PUBLIC_APP_URL,
     "https://*.aitlas.xyz",
     "https://*.f.xyz",
+  ],
+
+  // MCP Plugin - allows AI agents to authenticate via OAuth 2.0
+  // Enables this app to act as an OAuth provider for MCP clients
+  // See: https://better-auth.com/docs/plugins/mcp
+  plugins: [
+    mcp({
+      loginPage: "/sign-in",
+    }),
   ],
 });
 
