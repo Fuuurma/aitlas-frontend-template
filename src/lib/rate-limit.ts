@@ -20,7 +20,7 @@ export interface RateLimitConfig {
 }
 
 export class RateLimiter {
-  private timestamps: number[] = [];
+  protected timestamps: number[] = [];
   private readonly max: number;
   private readonly windowMs: number;
 

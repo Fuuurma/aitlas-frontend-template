@@ -235,7 +235,7 @@ export function AitlasSidebar({
                         {item.icon && <item.icon className="size-4" />}
                         <span>{item.title}</span>
                         {item.badge && (
-                          <Badge size="sm" className="ml-auto">
+                          <Badge className="ml-auto text-xs">
                             {item.badge}
                           </Badge>
                         )}
@@ -316,8 +316,8 @@ export function AitlasSidebar({
                 >
                   <Avatar className="h-8 w-8 rounded-lg">
                     <AvatarImage
-                      src={currentUser?.image}
-                      alt={currentUser?.name}
+                      src={currentUser?.image ?? undefined}
+                      alt={currentUser?.name ?? "User"}
                     />
                     <AvatarFallback className="rounded-lg">
                       {currentUser?.name?.slice(0, 2).toUpperCase() || "U"}

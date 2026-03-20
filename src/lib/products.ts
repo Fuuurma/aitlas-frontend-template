@@ -22,7 +22,6 @@ import {
   Wrench,
   Search,
   Globe,
-  FileText,
   Shield,
   TrendingUp,
   MessageSquare,

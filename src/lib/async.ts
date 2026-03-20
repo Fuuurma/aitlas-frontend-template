@@ -249,14 +249,19 @@ export function rateLimit<T extends (...args: any[]) => Promise<any>>(
     const now = Date.now();
 
     // Remove expired timestamps
-    while (timestamps.length > 0 && timestamps[0] <= now - windowMs) {
+    while (timestamps.length > 0) {
+      const first = timestamps[0];
+      if (first === undefined || first > now - windowMs) break;
       timestamps.shift();
     }
 
     // Check limit
     if (timestamps.length >= maxCalls) {
-      const waitTime = timestamps[0] + windowMs - now;
-      await delay(waitTime);
+      const oldest = timestamps[0];
+      if (oldest !== undefined) {
+        const waitTime = oldest + windowMs - now;
+        await delay(waitTime);
+      }
     }
 
     timestamps.push(Date.now());

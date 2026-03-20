@@ -17,6 +17,7 @@
  */
 
 import { z } from "zod";
+import { ValidationError } from "./errors";
 
 // ─── Types ────────────────────────────────────────────────────────
 
@@ -62,12 +63,12 @@ export function validateOrThrow<T>(data: unknown, schema: z.ZodType<T>): T {
 /**
  * Partial validation (only validate provided fields).
  */
-export function validatePartial<T>(
+export function validatePartial(
   data: Record<string, unknown>,
-  schema: z.ZodObject<any>
-): ValidationResult<Partial<T>> {
+  schema: z.ZodObject<Record<string, z.ZodTypeAny>>
+): ValidationResult<Record<string, unknown>> {
   const partialSchema = schema.partial();
-  return validate(data, partialSchema);
+  return validate(data, partialSchema) as ValidationResult<Record<string, unknown>>;
 }
 
 // ─── Common Schemas ────────────────────────────────────────────────
@@ -169,7 +170,7 @@ export function toFormErrors(
   for (const [field, messages] of Object.entries(errors)) {
     result[field] = {
       type: "validation",
-      message: messages[0],
+      message: messages[0] ?? "Validation failed",
     };
   }
 
